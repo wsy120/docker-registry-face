@@ -1,5 +1,9 @@
 # Docker Registry Face
 
+fork from github
+感谢提供代码,在基础上已经修改,适配了registry-2.7.1
+
+
 之前画的 [Lazy_balancer](https://github.com/v55448330/lazy-balancer) (Nginx WebUI) 推出之后广受好评。最近项目使用 Docker，一段时间内，因为持续集成的原因，每天会产生很多镜像，目前只能选择 Registry 、Nexus Repo 之类的产品，但是要么太重，要么太丑。想要点点鼠标就优雅的解决这个问题还是得靠自己，项目又诞生了。因为上一个项目使用了 Django，这里尝试使用 Flask。
 
 因为官方的 Registry 木有脸，所以这里就叫脸了 ... 非专业开发，代码凑合看。
@@ -58,3 +62,12 @@ http://[IP]:3000/
 ## 授权
 
 本项目由 [小宝](http://www.ichegg.org) 维护，采用 [GPLv3](http://www.gnu.org/licenses/gpl-3.0.html) 开源协议。欢迎反馈！欢迎贡献代码！
+
+
+已经修改适配registry2.7.1
+-----------
+-e REGISTRY_STORAGE_DELETE_ENABLED="true"
+
+启动,挂载存储配置目录
+cd ~/docker/docker-registry
+docker run -d  --hostname docker.songyi.com -p 5000:5000 --restart=always --name registry-2.7.1 -v $PWD/registry:/var/lib/registry -e REGISTRY_STORAGE_DELETE_ENABLED="true" --privileged=true registry:2.7.1

@@ -30,7 +30,9 @@ def get_images():
                 elif len(img) == 2:
                     img_data["title"] = img[1]
                     img_data["parent"] = img[0]
-
+                elif len(img) == 3:
+                    img_data["title"] = img[1] + "/" + img[2]
+                    img_data["parent"] = img[0]
                 image_list.append(img_data)
 
             temp_tree_view = {}
@@ -79,6 +81,7 @@ def get_image_tags():
             r = requests.get(url=registry_url + "/v2/" + image + "/tags/list", auth=HTTPBasicAuth(registry_user,registry_password) ,timeout=5, verify=verify_ssl)
             if r.status_code == 200:
                 t_list = json.loads(r.text).get('tags',[])
+                print t_list
                 for t in t_list:
                     img = {}
                     tr = requests.get(url=registry_url + "/v2/" + image + "/manifests/" + t, 
@@ -90,7 +93,8 @@ def get_image_tags():
                     print tr.headers
                     t_info = json.loads(tr.text)
                     if not t_info.has_key('errors'):
-                        last_modified = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(tr.headers.get('Last-Modified',''), '%a, %d %b %Y %H:%M:%S GMT'))
+                        print t_info
+                        last_modified = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(tr.headers.get('Date',''), '%a, %d %b %Y %H:%M:%S GMT'))
                         img["layer_count"] = len(t_info.get('layers'))
                         img["layer_detail"] = t_info.get('layers')
                         img["url"] = registry_url + "/" + image + ":" + t
